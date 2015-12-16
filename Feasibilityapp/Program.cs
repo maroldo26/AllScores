@@ -10,27 +10,35 @@ namespace Feasibilityapp
     {
         static void Main(string[] args)
         {
-            GetTournament();
-            GetStandings();
+           var comp = GetTournament();
+           GetStandings(comp);
             Console.ReadKey();
         }
 
-        private static async Task GetTournament()
+        private static CompetitionInfo GetTournament()
         {
-            var result = await ScoreProvider.Instance.GetTournaments();
-            Console.WriteLine("Competition Name : " + result.Competition[0].name);
-            Console.WriteLine("Competition Id : " + result.Competition[0].id);
-            Console.WriteLine("Competition Region : " + result.Competition[0].region);            
+            var result = ScoreProvider.Instance.GetCompetetions();
+
+            Console.WriteLine("Competition Name : " + result.Result.Competition[0].name);
+            Console.WriteLine("Competition Id : " + result.Result.Competition[0].id);
+            Console.WriteLine("Competition Region : " + result.Result.Competition[0].region);
+            return result.Result;
         }
 
-        private static async Task GetStandings()
+        private static async Task GetStandings(CompetitionInfo comp)
         {
-            var result = await ScoreProvider.Instance.GetStandings(1204);
-            foreach (var team in result.teams)
+            foreach (var item in comp.Competition)
             {
-                Console.WriteLine("Team Name : " + team.stand_team_name);
-                Console.WriteLine("Team Position: " + team.stand_position);
-                Console.WriteLine("Team Form : " + team.stand_recent_form);
+                int id;
+                int.TryParse(item.id, out id);
+                var result = await ScoreProvider.Instance.GetStandingsAsync(id);
+                foreach (var team in result)
+                {
+                    Console.WriteLine("Team Name : " + team.Team.Name);
+                    Console.WriteLine("Team Position: " + team.Position);
+                    Console.WriteLine("Team Form : " + team.Form);
+                }
+                Console.WriteLine("---------------------------------------");
             }
         }
     }

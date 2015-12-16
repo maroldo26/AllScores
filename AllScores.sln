@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "football-api", "football-ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Feasibilityapp", "Feasibilityapp\Feasibilityapp.csproj", "{BDF899F8-51D3-43EA-A34F-67C87C6ACA1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllScores.Common", "AllScores.Common\AllScores.Common.csproj", "{195A87DF-9388-4585-9CD8-0E663B6AFD36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{BDF899F8-51D3-43EA-A34F-67C87C6ACA1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDF899F8-51D3-43EA-A34F-67C87C6ACA1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDF899F8-51D3-43EA-A34F-67C87C6ACA1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

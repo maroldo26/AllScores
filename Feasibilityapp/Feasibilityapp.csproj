@@ -54,6 +54,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AllScores.Common\AllScores.Common.csproj">
+      <Project>{195a87df-9388-4585-9cd8-0e663b6afd36}</Project>
+      <Name>AllScores.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\football-api\football-api.csproj">
       <Project>{7cb9145e-0888-4614-ae46-7876bd5edf69}</Project>
       <Name>football-api</Name>
