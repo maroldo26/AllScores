@@ -20,11 +20,6 @@ namespace football_api
         /// </summary>
         private bool isinitialized;
 
-        /// <summary>
-        /// The list of competetions
-        /// </summary>
-        private CompetitionInfo competetions;
-
         #endregion
 
         #region Constructor
@@ -45,6 +40,11 @@ namespace football_api
         /// The instance
         /// </summary>
         private static ScoreProvider instance;
+
+        /// <summary>
+        /// The competetions
+        /// </summary>
+        private List<Tournament> competetions;
 
         /// <summary>
         /// Gets the instance.
@@ -75,22 +75,11 @@ namespace football_api
         /// </summary>
         private async Task Inititalize()
         {
-            var result =await this.GetTournaments();
-            competetions = result;
-            if (competetions.ERROR.Equals("ok", StringComparison.CurrentCultureIgnoreCase))
-            {
-                isinitialized = true;
-                foreach (var item in Utilities.GetStaticLeagues())
-                {
-                    competetions.Competition.Add(item);
-                }
-            }
-            else
-            {
-                var message = competetions.ERROR;
-                competetions = null;
-                throw new UnauthorizedAPIAccessException(message);
-            }                        
+            CompetitionInfo competitions;
+            var result = await this.GetTournaments();
+            competitions = result;
+            isinitialized = true;
+            this.competetions = Utilities.ConvertCompetitionToTournament(competitions);                    
         }
 
         /// <summary>
@@ -98,21 +87,13 @@ namespace football_api
         /// </summary>
         /// <returns></returns>
         private async Task<CompetitionInfo> GetTournaments()
-        {
-            try
-            {
-                var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-                var response = client.GetAsync(string.Format("?Action=competitions&APIKey={0}", Constants.ApiKey));
-                var content = response.Result.Content;                
-                string json = await content.ReadAsStringAsync();
-                client.Dispose();
-                return Utilities.ConvertJsonToObject<CompetitionInfo>(json);
-            }
-            catch (Exception)
-            {                
-                throw;
-            }
-            
+        {            
+            var client = Utilities.CreateWebRequest(Constants.BaseUrl);
+            var response = await client.GetAsync(string.Format("competitions?Authorization={0}", Constants.V2ApiKey));
+            var content = response.Content;                
+            string json = await content.ReadAsStringAsync();
+            client.Dispose();
+            return Utilities.ConvertJsonToObject<CompetitionInfo>(json);
         }
 
         #endregion
@@ -125,7 +106,7 @@ namespace football_api
         /// <value>
         /// The competetions.
         /// </value>
-        public async Task<CompetitionInfo> GetCompetetions()
+        public async Task<List<Tournament>> GetCompetetions()
         {
             if (!this.isinitialized)
             {
@@ -145,25 +126,17 @@ namespace football_api
         /// <returns></returns>
         public async Task<Standings> GetStandingsAsync(int competitionid)
         {
-            try
+            if (!this.isinitialized)
             {
-                if (!this.isinitialized)
-                {
-                    await this.Inititalize();
-                }
-                var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-                var response = client.GetAsync(string.Format("?Action=standings&APIKey={0}&comp_id={1}", Constants.ApiKey, competitionid));
-                var content = response.Result.Content;
-                string json = await content.ReadAsStringAsync();
-                client.Dispose();
-                var teams = Utilities.ConvertJsonToObject<TeamsInfo>(json);
-                return Utilities.ConvertTeamsInfoToStandings(teams);
+                await this.Inititalize();
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            var client = Utilities.CreateWebRequest(Constants.BaseUrl);
+            var response =await client.GetAsync(string.Format("standings/{1}?Authorization={0}", Constants.V2ApiKey, competitionid));
+            var content = response.Content;
+            string json = await content.ReadAsStringAsync();
+            client.Dispose();
+            var teams = Utilities.ConvertJsonToObject<TeamsInfo>(json);
+            return Utilities.ConvertTeamsInfoToStandings(teams);
         }
 
         //http://football-api.com/api/?Action=fixtures&APIKey=[YOUR_API_KEY]&comp_id=[COMPETITION]&&match_date=[DATE_IN_d.m.Y_FORMAT]
@@ -180,8 +153,8 @@ namespace football_api
                 await this.Inititalize();
             }
             var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response = client.GetAsync(string.Format("?Action=fixtures&APIKey={0}&comp_id={1}&&match_date={2}", Constants.ApiKey, competitionid, date));
-            var content = response.Result.Content;
+            var response =await client.GetAsync(string.Format("matches?comp_id={1}&match_date={2}&Authorization={0}", Constants.V2ApiKey, competitionid, date));
+            var content = response.Content;
             string json = await content.ReadAsStringAsync();
             client.Dispose();
             var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
@@ -203,22 +176,65 @@ namespace football_api
                 await this.Inititalize();
             }
             var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response = client.GetAsync(
+            var response = await client.GetAsync(
                 string.Format(
-                "?Action=fixtures&APIKey={0}&comp_id={1}&&match_date={2}", 
-                Constants.ApiKey, 
+                "matches?comp_id={1}&from_date={2}&to_date={3}&Authorization={0}", 
+                Constants.V2ApiKey, 
                 competitionid, 
                 fromdate, 
                 enddate)
                 );
-            var content = response.Result.Content;
+            var content = response.Content;
             string json = await content.ReadAsStringAsync();
             client.Dispose();
             var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
             return Utilities.ConvertMatchInfoToFixtures(matches);
         }
- 
+
+        public async Task<Fixtures> GetTeamFixturesAsync(string teamid, string date)
+        {
+            if (!this.isinitialized)
+            {
+                await this.Inititalize();
+            }
+            var client = Utilities.CreateWebRequest(Constants.BaseUrl);
+            var response = await client.GetAsync(
+                string.Format(
+                "matches?team_id={1}&match_date={2}&Authorization={0}",
+                Constants.V2ApiKey,
+                teamid,
+                date)
+                );
+            var content = response.Content;
+            string json = await content.ReadAsStringAsync();
+            client.Dispose();
+            var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
+            return Utilities.ConvertMatchInfoToFixtures(matches);
+        }
+
+        public async Task<Fixtures> GetTeamFixturesAsync(string teamid, string startdate, string enddate)
+        {
+            if (!this.isinitialized)
+            {
+                await this.Inititalize();
+            }
+            var client = Utilities.CreateWebRequest(Constants.BaseUrl);
+            var response = await client.GetAsync(
+                string.Format(
+                "matches?team_id={1}&from_date={2}&to_date={3}&Authorization={0}",
+                Constants.V2ApiKey,
+                teamid,
+                startdate,
+                enddate)
+                );
+            var content = response.Content;
+            string json = await content.ReadAsStringAsync();
+            client.Dispose();
+            var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
+            return Utilities.ConvertMatchInfoToFixtures(matches);
+        }
+
         #endregion
-        
+
     }
 }

@@ -9,7 +9,7 @@ namespace AllScores.Common.Data.Base
     /// <summary>
     /// Reresents a Fixture in any sport.
     /// </summary>
-    public class Fixture
+    public class Fixture : APIModel
     {
         /// <summary>
         /// Gets or sets the away team.

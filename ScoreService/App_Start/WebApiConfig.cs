@@ -19,6 +19,8 @@ namespace ScoreService
                 routeTemplate: "api/{controller}/{action}/{param}",
                 defaults: new { param = RouteParameter.Optional }
             );
+
+            config.Filters.Add(new ExceptionFilter());
         }
     }
 }

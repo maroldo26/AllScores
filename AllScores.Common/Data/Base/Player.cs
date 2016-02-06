@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AllScores.Common.Data
+namespace AllScores.Common.Data.Base
 {
-    public class Player
+    public class Player : APIModel
     {
         public string Name
         {

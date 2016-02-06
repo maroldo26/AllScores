@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AllScores.Common.Data.Base;
 using football_api;
 namespace Feasibilityapp
 {
@@ -15,22 +16,22 @@ namespace Feasibilityapp
             Console.ReadKey();
         }
 
-        private static CompetitionInfo GetTournament()
+        private static List<Tournament> GetTournament()
         {
             var result = ScoreProvider.Instance.GetCompetetions();
 
-            Console.WriteLine("Competition Name : " + result.Result.Competition[0].name);
-            Console.WriteLine("Competition Id : " + result.Result.Competition[0].id);
-            Console.WriteLine("Competition Region : " + result.Result.Competition[0].region);
+            Console.WriteLine("Competition Name : " + result.Result[0].Name);
+            Console.WriteLine("Competition Id : " + result.Result[0].Id);
+            Console.WriteLine("Competition Region : " + result.Result[0].Country);
             return result.Result;
         }
 
-        private static async Task GetStandings(CompetitionInfo comp)
+        private static async Task GetStandings(List<Tournament> comp)
         {
-            foreach (var item in comp.Competition)
+            foreach (var item in comp)
             {
                 int id;
-                int.TryParse(item.id, out id);
+                int.TryParse(item.Id, out id);
                 var result = await ScoreProvider.Instance.GetStandingsAsync(id);
                 foreach (var team in result)
                 {

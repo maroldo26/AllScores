@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AllScores.Common</RootNamespace>
     <AssemblyName>AllScores.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Base\APIModel.cs" />
+    <Compile Include="Data\Base\Competetion.cs" />
+    <Compile Include="Data\Base\CompetitionType.cs" />
     <Compile Include="Data\Base\Fixture.cs" />
+    <Compile Include="Data\Base\Sport.cs" />
     <Compile Include="Data\Base\SportType.cs" />
     <Compile Include="Data\Base\Team.cs" />
     <Compile Include="Data\Football\FootballFixture.cs" />

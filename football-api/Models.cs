@@ -27,92 +27,90 @@ namespace football_api
         public string ServerAddress { get; set; }
     }
 
-    public class CompetitionInfo : BaseInfo
-    {        
-        public List<Competition> Competition { get; set; }        
+    public class CompetitionInfo : List<Competition>
+    {              
     }
 
     public class Team
     {
-        public string stand_id { get; set; }
-        public string stand_competition_id { get; set; }
-        public string stand_season { get; set; }
-        public string stand_round { get; set; }
-        public string stand_stage_id { get; set; }
-        public string stand_group { get; set; }
-        public string stand_country { get; set; }
-        public string stand_team_id { get; set; }
-        public string stand_team_name { get; set; }
-        public string stand_status { get; set; }
-        public string stand_recent_form { get; set; }
-        public string stand_position { get; set; }
-        public string stand_overall_gp { get; set; }
-        public string stand_overall_w { get; set; }
-        public string stand_overall_d { get; set; }
-        public string stand_overall_l { get; set; }
-        public string stand_overall_gs { get; set; }
-        public string stand_overall_ga { get; set; }
-        public string stand_home_gp { get; set; }
-        public string stand_home_w { get; set; }
-        public string stand_home_d { get; set; }
-        public string stand_home_l { get; set; }
-        public string stand_home_gs { get; set; }
-        public string stand_home_ga { get; set; }
-        public string stand_away_gp { get; set; }
-        public string stand_away_w { get; set; }
-        public string stand_away_d { get; set; }
-        public string stand_away_l { get; set; }
-        public string stand_away_gs { get; set; }
-        public string stand_away_ga { get; set; }
-        public string stand_gd { get; set; }
-        public string stand_points { get; set; }
-        public string stand_desc { get; set; }
+        public string comp_id { get; set; }
+        public string season { get; set; }
+        public string round { get; set; }
+        public string stage_id { get; set; }
+        public object comp_group { get; set; }
+        public string country { get; set; }
+        public string team_id { get; set; }
+        public string team_name { get; set; }
+        public string status { get; set; }
+        public string recent_form { get; set; }
+        public string position { get; set; }
+        public string overall_gp { get; set; }
+        public string overall_w { get; set; }
+        public string overall_d { get; set; }
+        public string overall_l { get; set; }
+        public string overall_gs { get; set; }
+        public string overall_ga { get; set; }
+        public string home_gp { get; set; }
+        public string home_w { get; set; }
+        public string home_d { get; set; }
+        public string home_l { get; set; }
+        public string home_gs { get; set; }
+        public string home_ga { get; set; }
+        public string away_gp { get; set; }
+        public string away_w { get; set; }
+        public string away_d { get; set; }
+        public string away_l { get; set; }
+        public string away_gs { get; set; }
+        public string away_ga { get; set; }
+        public string gd { get; set; }
+        public string points { get; set; }
+        public string description { get; set; }
     }
 
-    public class TeamsInfo : BaseInfo
+    public class TeamsInfo : List<Team>
     {        
-        public List<Team> teams { get; set; }
     }
 
 
     public class MatchEvent
     {
-        public string event_id { get; set; }
-        public string event_match_id { get; set; }
-        public string event_type { get; set; }
-        public string event_minute { get; set; }
-        public string event_team { get; set; }
-        public string event_player { get; set; }
-        public string event_player_id { get; set; }
-        public string event_result { get; set; }
+        public string id { get; set; }
+        public string type { get; set; }
+        public string minute { get; set; }
+        public string extra_min { get; set; }
+        public string team { get; set; }
+        public string player { get; set; }
+        public string player_id { get; set; }
+        public string assist { get; set; }
+        public string assist_id { get; set; }
+        public string result { get; set; }
     }
 
     public class Match
     {
-        public string match_id { get; set; }
-        public string match_static_id { get; set; }
-        public string match_comp_id { get; set; }
-        public string match_date { get; set; }
-        public string match_formatted_date { get; set; }
-        public string match_season_beta { get; set; }
-        public string match_week_beta { get; set; }
-        public string match_venue_beta { get; set; }
-        public string match_venue_id_beta { get; set; }
-        public string match_venue_city_beta { get; set; }
-        public string match_status { get; set; }
-        public string match_timer { get; set; }
-        public string match_time { get; set; }
-        public string match_commentary_available { get; set; }
-        public string match_localteam_id { get; set; }
-        public string match_localteam_name { get; set; }
-        public string match_localteam_score { get; set; }
-        public string match_visitorteam_id { get; set; }
-        public string match_visitorteam_name { get; set; }
-        public string match_visitorteam_score { get; set; }
-        public string match_ht_score { get; set; }
-        public string match_ft_score { get; set; }
-        public string match_et_score { get; set; }
-        public List<MatchEvent> match_events { get; set; }
+        public string id { get; set; }
+        public string comp_id { get; set; }
+        public string formatted_date { get; set; }
+        public string season { get; set; }
+        public string week { get; set; }
+        public string venue { get; set; }
+        public string venue_id { get; set; }
+        public string venue_city { get; set; }
+        public string status { get; set; }
+        public string timer { get; set; }
+        public string time { get; set; }
+        public string localteam_id { get; set; }
+        public string localteam_name { get; set; }
+        public string localteam_score { get; set; }
+        public string visitorteam_id { get; set; }
+        public string visitorteam_name { get; set; }
+        public string visitorteam_score { get; set; }
+        public string ht_score { get; set; }
+        public string ft_score { get; set; }
+        public object et_score { get; set; }
+        public object penalty_local { get; set; }
+        public object penalty_visitor { get; set; }
+        public List<MatchEvent> events { get; set; }
     }
 
     public class Params
@@ -123,9 +121,8 @@ namespace football_api
         public string match_date { get; set; }
     }
 
-    public class MatchInfo : BaseInfo
+    public class MatchInfo : List<Match>
     {
-        public List<Match> matches { get; set; }
     }
 
 }

@@ -41,7 +41,7 @@ namespace football_api
                 { 
                     id = detail[0],
                     name = detail[1], 
-                    region = detail[2] 
+                    region = detail[2]
                 });
             }
             return leagues;
@@ -50,18 +50,28 @@ namespace football_api
         public static Fixtures ConvertMatchInfoToFixtures(MatchInfo matches)
         {
             Fixtures fixtures = new Fixtures();
-            foreach (var match in matches.matches)
+            foreach (var match in matches)
             {
                 FootballFixture fixture = new FootballFixture();
-                fixture.Id = match.match_id.ToInt();
+                fixture.Id = match.id.ToInt();
+                fixture.APIId = Constants.APIId;
                 fixture.HomeTeam = new FootballTeam()
                 {
-                    Id = match.match_localteam_id,
-                    Name = match.match_localteam_name,
+                    Id = match.localteam_id,
+                    APIId = Constants.APIId,
+                    Name = match.localteam_name,
                     TeamType = SportType.TeamSport
                 };
-                fixture.Score = match.match_ft_score;
-                fixture.Date = match.match_date;
+
+                fixture.AwayTeam = new FootballTeam()
+                {
+                    Id = match.visitorteam_id,
+                    APIId = Constants.APIId,
+                    Name = match.visitorteam_name,
+                    TeamType = SportType.TeamSport
+                };
+                fixture.Score = match.ft_score;
+                fixture.Date = match.formatted_date;
                 fixtures.Add(fixture);
             }
             return fixtures;
@@ -70,26 +80,44 @@ namespace football_api
         public static Standings ConvertTeamsInfoToStandings(TeamsInfo teams)
         {
             Standings standings = new Standings();
-            foreach (var team in teams.teams)
+            foreach (var team in teams)
             {
                 Standing standing = new Standing(){
                     Team = new FootballTeam()
                     {
-                        Id = team.stand_team_id,
-                        Name = team.stand_team_name,
+                        Id = team.team_id,
+                        APIId = Constants.APIId,
+                        Name = team.team_name,
                         TeamType = SportType.TeamSport
                     },
-                    Form = team.stand_recent_form,
-                    Points = team.stand_points,
-                    Position = team.stand_position,
-                    GoalsAgainst = team.stand_overall_ga,
-                    GoalsFor = team.stand_overall_gs,
-                    GamesPlayed = team.stand_overall_gp,
-                    GoalDifference = team.stand_overall_gs
+                    Form = team.recent_form,
+                    APIId = Constants.APIId,
+                    Points = team.points,
+                    Position = team.position,
+                    GoalsAgainst = team.overall_ga,
+                    GoalsFor = team.overall_gs,
+                    GamesPlayed = team.overall_gp,
+                    GoalDifference = team.overall_d
                 };
                 standings.Add(standing);
             }
             return standings;
+        }
+
+        public static List<Tournament> ConvertCompetitionToTournament(List<Competition> competitions)
+        {
+            var competetions = new List<Tournament>();
+            foreach (var competition in competitions)
+            {
+                var competetion = new Tournament();
+                competetion.APIId = Constants.APIId;
+                competetion.Country = competition.region;
+                competetion.Id = competition.id;
+                competetion.Name = competition.name;
+                competetion.Sport = Sport.Football;
+                competetions.Add(competetion);
+            }
+            return competetions;
         }
 
         public static int ToInt(this string number)

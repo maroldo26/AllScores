@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "football-api", "football-api\football-api.csproj", "{7CB9145E-0888-4614-AE46-7876BD5EDF69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllScores.Common", "AllScores.Common\AllScores.Common.csproj", "{195A87DF-9388-4585-9CD8-0E663B6AFD36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreService", "ScoreService\ScoreService.csproj", "{C952F9B1-6390-484F-9C3E-F8E1BF8EC784}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CB9145E-0888-4614-AE46-7876BD5EDF69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CB9145E-0888-4614-AE46-7876BD5EDF69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CB9145E-0888-4614-AE46-7876BD5EDF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CB9145E-0888-4614-AE46-7876BD5EDF69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{195A87DF-9388-4585-9CD8-0E663B6AFD36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C952F9B1-6390-484F-9C3E-F8E1BF8EC784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C952F9B1-6390-484F-9C3E-F8E1BF8EC784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C952F9B1-6390-484F-9C3E-F8E1BF8EC784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C952F9B1-6390-484F-9C3E-F8E1BF8EC784}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
