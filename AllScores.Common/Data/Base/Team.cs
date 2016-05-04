@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AllScores.Common.Data.Base
 {
-    public class Team : APIModel
+    public class Team
     {
         public string Name { get; set; }
         public string Id { get; set; }

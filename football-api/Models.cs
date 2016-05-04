@@ -27,8 +27,9 @@ namespace football_api
         public string ServerAddress { get; set; }
     }
 
-    public class CompetitionInfo : List<Competition>
-    {              
+    public class CompetitionInfo : List<Competition>//: BaseInfo
+    {        
+        //public List<Competition> Competition { get; set; }        
     }
 
     public class Team
@@ -69,6 +70,7 @@ namespace football_api
 
     public class TeamsInfo : List<Team>
     {        
+        //public List<Team> teams { get; set; }
     }
 
 
@@ -123,6 +125,7 @@ namespace football_api
 
     public class MatchInfo : List<Match>
     {
+        
     }
 
 }

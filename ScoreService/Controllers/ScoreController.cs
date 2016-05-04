@@ -18,11 +18,23 @@ namespace ScoreService.Controllers
 
         [HttpGet]
         //[Route("tournament")]
-        //http://localhost:63823/api/score/gettounament
+        //http://localhost:63823/api/score/gettounaments
         public async Task<HttpResponseMessage> GetTounaments()
         {
-            var tournament =await ScoreProvider.Instance.GetCompetetions();
-            return Request.CreateResponse<List<Tournament>>(HttpStatusCode.OK, tournament);
+            try
+            {
+                var tournament =await ScoreProvider.Instance.GetCompetetions();
+                return Request.CreateResponse<CompetitionInfo>(HttpStatusCode.OK, tournament);
+            }
+            catch (UnauthorizedAPIAccessException uex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, uex);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+            
         }
 
         [HttpGet]
@@ -30,8 +42,23 @@ namespace ScoreService.Controllers
         //http://localhost:63823/api/score/gettable/1204
         public async Task<HttpResponseMessage> GetTable(int param)
         {
-            var table = await ScoreProvider.Instance.GetStandingsAsync(param);
-            return Request.CreateResponse<Standings>(HttpStatusCode.OK, table);
+            try
+            {
+                var table = await ScoreProvider.Instance.GetStandingsAsync(param);
+                return Request.CreateResponse<Standings>(HttpStatusCode.OK, table);
+            }
+            catch (UnauthorizedAPIAccessException uex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, uex);
+            }
+            catch (APIAcessException ex)
+            {
+                return Request.CreateErrorResponse(ex.StatusCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
         }
 
         [HttpGet]
@@ -39,8 +66,69 @@ namespace ScoreService.Controllers
         // TODO 
         public async Task<HttpResponseMessage> GetFixtures(string competitionid,string date)
         {
-            var fixtures = await ScoreProvider.Instance.GetFixturesAsync(competitionid, date);
-            return Request.CreateResponse<Fixtures>(fixtures);
-        }        
+            try
+            {
+                var fixtures = await ScoreProvider.Instance.GetFixturesAsync(competitionid, date);
+                return Request.CreateResponse<Fixtures>(fixtures);
+            }
+            catch (UnauthorizedAPIAccessException uex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, uex);
+            }
+            catch (APIAcessException ex)
+            {
+                return Request.CreateErrorResponse(ex.StatusCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        [HttpGet]
+        //http://localhost:63823/api/score/getfixtures?competitionid=1204&fromdate=13.12.2015&enddate=15.12.2015
+        // TODO 
+        public async Task<HttpResponseMessage> GetFixtures(string competitionid, string fromdate, string enddate)
+        {
+            try
+            {
+                var fixtures = await ScoreProvider.Instance.GetFixturesAsync(competitionid, fromdate, enddate);
+                return Request.CreateResponse<Fixtures>(fixtures);
+            }
+            catch (UnauthorizedAPIAccessException uex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, uex);
+            }
+            catch (APIAcessException ex)
+            {
+                return Request.CreateErrorResponse(ex.StatusCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        public async Task<HttpResponseMessage> GetFixtures(string teamid)
+        {
+            try
+            {
+                var date = DateTime.Today.ToString("d.M.yyyy");
+                var fixtures = await ScoreProvider.Instance.GetFixturesAsync(teamid, date);
+                return Request.CreateResponse<Fixtures>(fixtures);
+            }
+            catch (UnauthorizedAPIAccessException uex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, uex);
+            }
+            catch (APIAcessException ex)
+            {
+                return Request.CreateErrorResponse(ex.StatusCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AllScores.Common.Data.Base;
 using AllScores.Common.Data.Football;
 using AllScores.Common.Exceptions;
+using Newtonsoft.Json;
 
 namespace football_api
 {
@@ -19,6 +20,11 @@ namespace football_api
         /// Should be set to true if sucessfuly get the tournament info.
         /// </summary>
         private bool isinitialized;
+
+        /// <summary>
+        /// The list of competetions
+        /// </summary>
+        private CompetitionInfo competetions;
 
         #endregion
 
@@ -40,11 +46,6 @@ namespace football_api
         /// The instance
         /// </summary>
         private static ScoreProvider instance;
-
-        /// <summary>
-        /// The competetions
-        /// </summary>
-        private List<Tournament> competetions;
 
         /// <summary>
         /// Gets the instance.
@@ -75,11 +76,23 @@ namespace football_api
         /// </summary>
         private async Task Inititalize()
         {
-            CompetitionInfo competitions;
-            var result = await this.GetTournaments();
-            competitions = result;
+            var result =await this.GetTournaments();
+            competetions = result;
             isinitialized = true;
-            this.competetions = Utilities.ConvertCompetitionToTournament(competitions);                    
+            //if (competetions.ERROR.Equals("ok", StringComparison.CurrentCultureIgnoreCase))
+            //{
+            //    isinitialized = true;
+            //    foreach (var item in Utilities.GetStaticLeagues())
+            //    {
+            //        competetions.Competition.Add(item);
+            //    }
+            //}
+            //else
+            //{
+            //    var message = competetions.ERROR;
+            //    competetions = null;
+            //    throw new UnauthorizedAPIAccessException(message);
+            //}                        
         }
 
         /// <summary>
@@ -87,13 +100,23 @@ namespace football_api
         /// </summary>
         /// <returns></returns>
         private async Task<CompetitionInfo> GetTournaments()
-        {            
+        {
             var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response = await client.GetAsync(string.Format("competitions?Authorization={0}", Constants.V2ApiKey));
-            var content = response.Content;                
+            //var response = client.GetAsync(string.Format("?Action=competitions&APIKey={0}", Constants.ApiKey));
+            //http://api.football-api.com/2.0/competitions?Authorization=565eaa22251f932b9f000001d50aaf0b55c7477c5ffcdbaf113ebbda
+            var response = client.GetAsync("competitions?Authorization=565eaa22251f932b9f000001d50aaf0b55c7477c5ffcdbaf113ebbda");
+            var content = response.Result.Content;                
             string json = await content.ReadAsStringAsync();
             client.Dispose();
+
+            if (response.Result.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(response.Result.ReasonPhrase);
+            }
+
             return Utilities.ConvertJsonToObject<CompetitionInfo>(json);
+            
+            
         }
 
         #endregion
@@ -106,7 +129,7 @@ namespace football_api
         /// <value>
         /// The competetions.
         /// </value>
-        public async Task<List<Tournament>> GetCompetetions()
+        public async Task<CompetitionInfo> GetCompetetions()
         {
             if (!this.isinitialized)
             {
@@ -131,10 +154,22 @@ namespace football_api
                 await this.Inititalize();
             }
             var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response =await client.GetAsync(string.Format("standings/{1}?Authorization={0}", Constants.V2ApiKey, competitionid));
-            var content = response.Content;
+            //var response = client.GetAsync(string.Format("?Action=standings&APIKey={0}&comp_id={1}", Constants.ApiKey, competitionid));
+            //http://api.football-api.com/2.0/standings/1204?Authorization=565eaa22251f932b9f000001d50aaf0b55c7477c5ffcdbaf113ebbda
+            var response = client.GetAsync(string.Format("standings/{0}?Authorization=565eaa22251f932b9f000001d50aaf0b55c7477c5ffcdbaf113ebbda", competitionid));
+
+                
+            var content = response.Result.Content;
             string json = await content.ReadAsStringAsync();
             client.Dispose();
+
+            var statuscode = response.Result.StatusCode;
+            if (statuscode != System.Net.HttpStatusCode.OK)
+            {
+                dynamic error = JsonConvert.DeserializeObject(json);
+                throw new APIAcessException(error.message.Value) { StatusCode = statuscode };
+            }            
+                
             var teams = Utilities.ConvertJsonToObject<TeamsInfo>(json);
             return Utilities.ConvertTeamsInfoToStandings(teams);
         }
@@ -153,10 +188,19 @@ namespace football_api
                 await this.Inititalize();
             }
             var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response =await client.GetAsync(string.Format("matches?comp_id={1}&match_date={2}&Authorization={0}", Constants.V2ApiKey, competitionid, date));
-            var content = response.Content;
+            var response = client.GetAsync(
+               string.Format(
+               "matches?comp_id={0}&from_date={1}&Authorization=565eaa22251f932b9f000001d50aaf0b55c7477c5ffcdbaf113ebbda",
+               competitionid,
+               date));
+            var content = response.Result.Content;
             string json = await content.ReadAsStringAsync();
             client.Dispose();
+            if (response.Result.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(response.Result.ReasonPhrase);
+            }
+
             var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
             return Utilities.ConvertMatchInfoToFixtures(matches);
         }
@@ -176,65 +220,30 @@ namespace football_api
                 await this.Inititalize();
             }
             var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response = await client.GetAsync(
+
+            //http://api.football-api.com/2.0/matches?comp_id=1204&from_date=5.2.2016&to_date=10.2.2016&Authorization=565eaa22251f932b9f000001d50aaf0b55c7477c5ffcdbaf113ebbda
+            var response = client.GetAsync(
                 string.Format(
-                "matches?comp_id={1}&from_date={2}&to_date={3}&Authorization={0}", 
-                Constants.V2ApiKey, 
+                "matches?comp_id={0}&from_date={1}&to_date={2}&Authorization=565eaa22251f932b9f000001d50aaf0b55c7477c5ffcdbaf113ebbda", 
                 competitionid, 
                 fromdate, 
                 enddate)
                 );
-            var content = response.Content;
+            var content = response.Result.Content;
             string json = await content.ReadAsStringAsync();
             client.Dispose();
-            var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
-            return Utilities.ConvertMatchInfoToFixtures(matches);
-        }
-
-        public async Task<Fixtures> GetTeamFixturesAsync(string teamid, string date)
-        {
-            if (!this.isinitialized)
+            var statuscode = response.Result.StatusCode;
+            if (statuscode != System.Net.HttpStatusCode.OK)
             {
-                await this.Inititalize();
+                dynamic error = JsonConvert.DeserializeObject(json);
+                throw new APIAcessException(error.message.Value) { StatusCode = statuscode };
             }
-            var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response = await client.GetAsync(
-                string.Format(
-                "matches?team_id={1}&match_date={2}&Authorization={0}",
-                Constants.V2ApiKey,
-                teamid,
-                date)
-                );
-            var content = response.Content;
-            string json = await content.ReadAsStringAsync();
-            client.Dispose();
+
             var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
             return Utilities.ConvertMatchInfoToFixtures(matches);
         }
-
-        public async Task<Fixtures> GetTeamFixturesAsync(string teamid, string startdate, string enddate)
-        {
-            if (!this.isinitialized)
-            {
-                await this.Inititalize();
-            }
-            var client = Utilities.CreateWebRequest(Constants.BaseUrl);
-            var response = await client.GetAsync(
-                string.Format(
-                "matches?team_id={1}&from_date={2}&to_date={3}&Authorization={0}",
-                Constants.V2ApiKey,
-                teamid,
-                startdate,
-                enddate)
-                );
-            var content = response.Content;
-            string json = await content.ReadAsStringAsync();
-            client.Dispose();
-            var matches = Utilities.ConvertJsonToObject<MatchInfo>(json);
-            return Utilities.ConvertMatchInfoToFixtures(matches);
-        }
-
+ 
         #endregion
-
+        
     }
 }

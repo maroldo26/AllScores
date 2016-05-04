@@ -9,7 +9,7 @@ namespace AllScores.Common.Data.Base
     /// <summary>
     /// Reresents a Fixture in any sport.
     /// </summary>
-    public class Fixture : APIModel
+    public class Fixture
     {
         /// <summary>
         /// Gets or sets the away team.
@@ -41,7 +41,7 @@ namespace AllScores.Common.Data.Base
         /// <value>
         /// The venue.
         /// </value>
-        public int Venue
+        public string Venue
         {
             get;
             set;

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AllScores.Common.Data.Base;
 
 namespace AllScores.Common.Data.Football
 {
-    public class Standing : APIModel
+    public class Standing
     {
         public FootballTeam Team { get; set; }
         public string Position { get; set; }

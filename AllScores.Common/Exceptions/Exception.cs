@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Net;
 namespace AllScores.Common.Exceptions
 {
     public class UnauthorizedAPIAccessException:Exception
@@ -21,4 +21,15 @@ namespace AllScores.Common.Exceptions
 
         }
     }
+
+    public class APIAcessException:Exception
+    {
+       public APIAcessException(string message):base(message)
+        {
+
+        }
+
+       public HttpStatusCode StatusCode { get; set; }
+    }
+
 }

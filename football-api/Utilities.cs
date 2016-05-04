@@ -41,7 +41,7 @@ namespace football_api
                 { 
                     id = detail[0],
                     name = detail[1], 
-                    region = detail[2]
+                    region = detail[2] 
                 });
             }
             return leagues;
@@ -54,11 +54,9 @@ namespace football_api
             {
                 FootballFixture fixture = new FootballFixture();
                 fixture.Id = match.id.ToInt();
-                fixture.APIId = Constants.APIId;
                 fixture.HomeTeam = new FootballTeam()
                 {
                     Id = match.localteam_id,
-                    APIId = Constants.APIId,
                     Name = match.localteam_name,
                     TeamType = SportType.TeamSport
                 };
@@ -66,10 +64,12 @@ namespace football_api
                 fixture.AwayTeam = new FootballTeam()
                 {
                     Id = match.visitorteam_id,
-                    APIId = Constants.APIId,
                     Name = match.visitorteam_name,
                     TeamType = SportType.TeamSport
                 };
+
+                fixture.Venue = match.venue;
+
                 fixture.Score = match.ft_score;
                 fixture.Date = match.formatted_date;
                 fixtures.Add(fixture);
@@ -86,38 +86,20 @@ namespace football_api
                     Team = new FootballTeam()
                     {
                         Id = team.team_id,
-                        APIId = Constants.APIId,
                         Name = team.team_name,
                         TeamType = SportType.TeamSport
                     },
                     Form = team.recent_form,
-                    APIId = Constants.APIId,
                     Points = team.points,
                     Position = team.position,
                     GoalsAgainst = team.overall_ga,
                     GoalsFor = team.overall_gs,
                     GamesPlayed = team.overall_gp,
-                    GoalDifference = team.overall_d
+                    GoalDifference = team.overall_gs
                 };
                 standings.Add(standing);
             }
             return standings;
-        }
-
-        public static List<Tournament> ConvertCompetitionToTournament(List<Competition> competitions)
-        {
-            var competetions = new List<Tournament>();
-            foreach (var competition in competitions)
-            {
-                var competetion = new Tournament();
-                competetion.APIId = Constants.APIId;
-                competetion.Country = competition.region;
-                competetion.Id = competition.id;
-                competetion.Name = competition.name;
-                competetion.Sport = Sport.Football;
-                competetions.Add(competetion);
-            }
-            return competetions;
         }
 
         public static int ToInt(this string number)
